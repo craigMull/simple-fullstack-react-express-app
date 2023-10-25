@@ -1,9 +1,9 @@
-
+//require('dotenv').config(); // Load environment variables from .env file
 import express from 'express';
 import bodyParser from "body-parser";
 import cors from "cors";
 import path from "path";
-const PORT = 8080;
+const PORT = 5000;
 
 import { getNotes, getNote, createNote } from './database.js'
 
@@ -11,7 +11,12 @@ const app = express()
 
 app.use(express.json())
 app.use(cors());
-app.use(express.static('public'))
+//app.use(express.static('public'))
+// Have Node serve the files for our built React app
+//app.use(express.static(path.resolve(__dirname, '../client-app/build')));
+
+
+app.use(express.static('../client-app/build'))
 
 const postsList = [
     {
@@ -34,8 +39,12 @@ const postsList = [
     }
 ];
 
-app.get('/', (req, res) => {
-   res.send('Root')
+//app.get('/', (req, res) => {
+//   res.send('Root')
+//})
+
+app.get('/api', (request, response) => {
+    response.send({ message: "Connected" });
 })
 
 app.get('/posts', (request, response) => {
@@ -93,6 +102,7 @@ app.use(function(err, req, res, next) {
   err.message;
   next(err);
 });
+
 
 app.listen(PORT, () => {
     console.log(`🚀 Server started at http://localhost:${PORT}`)
